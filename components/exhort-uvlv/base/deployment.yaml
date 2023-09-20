@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: exhort
+    app.kubernetes.io/created-by: application-service
+    app.kubernetes.io/instance: exhort-uvlv
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: exhort-uvlv
+    app.kubernetes.io/part-of: exhort3
+  name: exhort-uvlv
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: exhort
+      app.kubernetes.io/instance: exhort-uvlv
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: exhort
+        app.kubernetes.io/instance: exhort-uvlv
+    spec:
+      containers:
+      - env:
+        - name: API_TRUSTEDCONTENT_DISABLED
+          value: "true"
+        - name: TELEMETRY_DISABLED
+          value: "true"
+        image: quay.io/ecosystem-appeng/exhort:latest
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /q/health/live
+            port: 8080
+          initialDelaySeconds: 1
+        name: exhort
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 9000
+          name: management
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /q/health/ready
+            port: 9000
+          initialDelaySeconds: 5
+          periodSeconds: 20
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 128Mi
+status: {}

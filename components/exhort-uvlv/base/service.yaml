@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: exhort
+    app.kubernetes.io/created-by: application-service
+    app.kubernetes.io/instance: exhort-uvlv
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: exhort-uvlv
+    app.kubernetes.io/part-of: exhort3
+  name: exhort-uvlv
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: management
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: exhort
+    app.kubernetes.io/instance: exhort-uvlv
+status:
+  loadBalancer: {}
